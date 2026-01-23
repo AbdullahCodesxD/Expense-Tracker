@@ -43,9 +43,13 @@ const alphabetsAndSigns = [
 
 export default class ExpenseModel {
   constructor() {
-    this.totalExpense = 0;
     this.categories = [];
-    this.expenses = [];
+    this.expenses =
+      JSON.parse(localStorage.getItem("expenses"))?.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+      ) ?? [];
+    this.totalExpense =
+      this?.expenses?.reduce((acc, val) => acc + Number(val.amount), 0) ?? 0;
   }
 
   generateId() {
@@ -62,15 +66,20 @@ export default class ExpenseModel {
   }
   addExpense(expense) {
     if (!expense) return;
-    this.expenses.push({
-      ...expense,
-      _id: this.generateId(),
-    });
+    this.expenses = this.expenses
+      .unshift({
+        ...expense,
+        _id: this.generateId(),
+        createdAt: new Date().toISOString(),
+      })
+      ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    localStorage.setItem("expenses", JSON.stringify(this.expenses));
+
     this.totalExpense = this.expenses.reduce(
       (acc, curr) => acc + Number(curr.amount || 0),
       0,
     );
-    console.log(this.expenses, this.totalExpense);
   }
 
   removeExpense(expenseId) {
@@ -85,5 +94,9 @@ export default class ExpenseModel {
     this.expenses = this.expenses.filter(
       (expense) => expense._id === expenseId.trim().toLowerCase(),
     );
+  }
+
+  getExpenses() {
+    return this.expenses;
   }
 }
