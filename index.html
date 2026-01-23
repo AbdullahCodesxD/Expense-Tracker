@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style/index.css" />
+  </head>
+  <body>
+    <section id="expense-parent">
+      <form id="add-expense">
+        <input class="title" type="text" />
+        <input class="amount" type="number" />
+        <input class="category" type="text" />
+        <input class="date" type="date" />
+
+        <button class="btn btn-main">Add Expense</button>
+      </form>
+    </section>
+
+    <script type="module">
+      import ExpenseController from "./controllers/expense.controller.js";
+      new ExpenseController();
+    </script>
+  </body>
+</html>
