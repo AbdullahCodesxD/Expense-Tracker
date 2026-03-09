@@ -66,13 +66,16 @@ export default class ExpenseModel {
   }
   addExpense(expense) {
     if (!expense) return;
-    this.expenses = this.expenses
-      .unshift({
-        ...expense,
-        _id: this.generateId(),
-        createdAt: new Date().toISOString(),
-      })
-      ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    const newExpense = {
+      ...expense,
+      _id: this.generateId(),
+      createdAt: new Date().toISOString(),
+    };
+
+    this.expenses.unshift(newExpense);
+
+    this.expenses.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     localStorage.setItem("expenses", JSON.stringify(this.expenses));
 
@@ -81,7 +84,6 @@ export default class ExpenseModel {
       0,
     );
   }
-
   removeExpense(expenseId) {
     if (!expenseId) return;
     const expenseExists =
@@ -92,7 +94,7 @@ export default class ExpenseModel {
     if (!expenseExists) return;
 
     this.expenses = this.expenses.filter(
-      (expense) => expense._id === expenseId.trim().toLowerCase(),
+      (expense) => expense._id !== expenseId.trim().toLowerCase(),
     );
   }
 
